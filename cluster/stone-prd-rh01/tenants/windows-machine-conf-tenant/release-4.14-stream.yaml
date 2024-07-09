@@ -1,0 +1,41 @@
+apiVersion: projctl.konflux.dev/v1beta1
+kind: ProjectDevelopmentStream
+metadata:
+  name: windows-machine-config-operator-release-4-14
+spec:
+  project: windows-machine-config-operator
+  template:
+    name: windows-machine-config-operator-template
+    values:
+    - name: ocpVersion
+      value: "4.14"
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: ImageRepository
+metadata:
+  labels:
+    appstudio.redhat.com/application: "windows-machine-config-operator-release-4-14"
+    appstudio.redhat.com/component: "windows-machine-config-operator-release-4-14"
+  annotations:
+    image-controller.appstudio.redhat.com/update-component-image: 'true'
+  name: imagerepository-for-windows-machine-config-operator-release-4-14-windows-machine-config-operator-release-4-14
+  namespace: windows-machine-conf-tenant
+spec:
+  image:
+    name: windows-machine-config-operator/windows-machine-config-operator-release-4-14
+    visibility: public
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: ImageRepository
+metadata:
+  labels:
+    appstudio.redhat.com/application: "windows-machine-config-operator-release-4-14"
+    appstudio.redhat.com/component: "windows-machine-config-operator-bundle-release-4-14"
+  annotations:
+    image-controller.appstudio.redhat.com/update-component-image: 'true'
+  name: imagerepository-for-windows-machine-config-operator-release-4-14-windows-machine-config-operator-bundle-release-4-14
+  namespace: windows-machine-conf-tenant
+spec:
+  image:
+    name: windows-machine-config-operator/windows-machine-config-operator-bundle-release-4-14
+    visibility: public

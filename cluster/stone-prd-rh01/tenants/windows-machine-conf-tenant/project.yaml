@@ -1,0 +1,9 @@
+apiVersion: projctl.konflux.dev/v1beta1
+kind: Project
+metadata:
+  name: windows-machine-config-operator
+spec:
+  displayName: "Windows Machine Config Operator"
+  description: |
+    Project for releasing the Windows Machine Config Operator
+    https://github.com/openshift/windows-machine-config-operator/

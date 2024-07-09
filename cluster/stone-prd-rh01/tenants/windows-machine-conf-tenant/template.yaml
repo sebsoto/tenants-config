@@ -1,0 +1,70 @@
+apiVersion: projctl.konflux.dev/v1beta1
+kind: ProjectDevelopmentStreamTemplate
+metadata:
+  name: windows-machine-config-operator-template
+spec:
+  project: windows-machine-config-operator
+  variables:
+  - name: ocpVersion
+    description: Version of OCP the application targets
+  - name: branch
+    description: The branch targetting the given ocpVersion
+    defaultValue: "release-{{.ocpVersion}}"
+  - name: branchSanitized
+    description: A K8s-compliant name for the branch
+    defaultValue: "{{hyphenize .branch}}"
+  resources:
+  - apiVersion: appstudio.redhat.com/v1alpha1
+    kind: Application
+    metadata:
+      annotations:
+        application.thumbnail: "5"
+        finalizeCount: "0"
+      finalizers:
+      - spi.appstudio.redhat.com/remote-secrets
+      - application.appstudio.redhat.com/finalizer
+      name: "windows-machine-config-operator-{{.branchSanitized}}"
+    spec:
+      displayName: "windows-machine-config-operator-{{.branchSanitized}}"
+  - apiVersion: appstudio.redhat.com/v1alpha1
+    kind: Component
+    metadata:
+      annotations:
+        applicationFailCounter: "0"
+      finalizers:
+      - test.appstudio.openshift.io/component
+      - component.appstudio.redhat.com/finalizer
+      - image-controller.appstudio.openshift.io/image-repository
+      - image-registry-secret-sa-link.component.appstudio.openshift.io/finalizer
+      - pac.component.appstudio.openshift.io/finalizer
+      name: windows-machine-config-operator-{{.branchSanitized}}
+    spec:
+      application: "windows-machine-config-operator-{{.branchSanitized}}"
+      componentName: "windows-machine-config-operator-{{.branchSanitized}}"
+      source:
+        git:
+          context: ./
+          dockerfileUrl: build/Dockerfile.konflux
+          revision: "{{.branch}}"
+          url: https://github.com/openshift/windows-machine-config-operator.git
+  - apiVersion: appstudio.redhat.com/v1alpha1
+    kind: Component
+    metadata:
+      annotations:
+        applicationFailCounter: "0"
+      finalizers:
+      - test.appstudio.openshift.io/component
+      - component.appstudio.redhat.com/finalizer
+      - image-controller.appstudio.openshift.io/image-repository
+      - image-registry-secret-sa-link.component.appstudio.openshift.io/finalizer
+      - pac.component.appstudio.openshift.io/finalizer
+      name: windows-machine-config-operator-bundle-{{.branchSanitized}}
+    spec:
+      application: "windows-machine-config-operator-{{.branchSanitized}}"
+      componentName: "windows-machine-config-operator-bundle-{{.branchSanitized}}"
+      source:
+        git:
+          context: ./
+          dockerfileUrl: build/bundle-konflux.Dockerfile
+          revision: "{{.branch}}"
+          url: https://github.com/openshift/windows-machine-config-operator.git
